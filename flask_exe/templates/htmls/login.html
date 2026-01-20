@@ -1,29 +1,41 @@
-{% extends "layout.html" %}
-{% block title %}
-津山高専HR管理システム
-{% endblock %}
-{% block contents %}
-<p>現在時刻：{{ time }}</p>
-{% if error %}
-    <p style="color:red">{{ error }}</p>
-{% endif %}
-<table border="1" width="400">
-    <caption>ログイン</caption>
-    <form method="POST" action="/login">
-        <tr>
-            <td>ユーザー名:</td>
-            <td><input type="text" name="username" size="20"/></td>
-        </tr>
-        <tr>
-            <td>パスワード:</td>
-            <td><input type="password" name="password" size="20"/></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center">
-                <input type="submit" value="ログイン"/>
-                <a href="/password?login=1">パスワード忘れちゃった(-_-;)</a>
-            </td>
-        </tr>
-    </form>
-</table>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>津山高専HR管理システム - ログイン</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h1>🎓 津山高専 HR管理システム</h1>
+        <h2>ログイン</h2>
+        
+        {% if error %}
+        <p class="login-error">⚠️ {{ error }}</p>
+        {% endif %}
+
+        <form method="POST" action="/login">
+            <fieldset>
+                <legend>ログイン情報</legend>
+                
+                <div>
+                    <label for="username">👤 ユーザー名：</label>
+                    <input type="text" id="username" name="username" required autofocus>
+                </div>
+
+                <div>
+                    <label for="password">🔒 パスワード：</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <button type="submit">🚪 ログイン</button>
+            </fieldset>
+        </form>
+
+        <p><a href="/password?login=1">🔑 パスワードをお忘れですか？</a></p>
+        
+        <p>🕐 現在時刻：{{ time }}</p>
+    </div>
+</body>
+</html>

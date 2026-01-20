@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block contents %}
+<article>
+    <div class="teacher-header">
+        <h1>📚 生徒の日誌管理</h1>
+        <span class="user-badge">👤 {{ session.get('username') }}先生</span>
+        <p>全生徒の日誌を確認・管理します</p>
+    </div>
+
+    <div class="stats-section">
+        <div class="stat-card">
+            <h3>📝 総日誌数</h3>
+            <p class="number">{{ all_reports | length }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>👥 提出生徒数</h3>
+            {% set usernames = [] %}
+            {% for report in all_reports %}
+                {% if report.username not in usernames %}
+                    {% set _ = usernames.append(report.username) %}
+                {% endif %}
+            {% endfor %}
+            <p class="number">{{ usernames | length }}</p>
+        </div>
+    </div>
+
+    <section>
+        <h2>🔍 日誌検索・一覧</h2>
+        
+        <div class="search-box">
+            <form method="GET" action="/home">
+                <label for="search"><strong>検索：</strong></label>
+                <input type="text" id="search" name="search" value="{{ search_query if search_query else '' }}" placeholder="ユーザー名、タイトル、内容、コメント、日付で検索...">
+                <button type="submit">🔍 検索</button>
+                {% if search_query %}
+                <a href="/home">✖ クリア</a>
+                <span class="search-result">検索結果：{{ all_reports | length }} 件</span>
+                {% endif %}
+            </form>
+        </div>
+        
+        {% if all_reports %}
+        <table class="reports-table">
+            <thead>
+                <tr>
+                    <th>👤 提出者</th>
+                    <th>📅 日付</th>
+                    <th>📌 タイトル</th>
+                    <th>📝 内容</th>
+                    <th>💬 コメント</th>
+                    <th>⚙️ 操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in all_reports %}
+                <tr>
+                    <td>{{ report.username }}</td>
+                    <td>{{ report.date }}</td>
+                    <td>{{ report.title }}</td>
+                    <td>{{ report.content }}</td>
+                    <td>
+                        {% if report.comment %}
+                            {{ report.comment }}
+                            {% if report.comment_teacher %}
+                                <div style="font-size: 0.85em; color: #6c757d; margin-top: 5px;">
+                                    （{{ report.comment_teacher }}先生）
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            －
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="POST" action="/submit_comment" class="comment-form">
+                            <input type="hidden" name="row_id" value="{{ report.row_id }}">
+                            <textarea name="comment" placeholder="コメントを入力..." required rows="3">{{ report.comment if report.comment else '' }}</textarea>
+                            <button type="submit">💾 保存</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            {% if search_query %}
+            <p>「{{ search_query }}」に一致する日誌が見つかりませんでした。</p>
+            {% else %}
+            <p>まだ生徒から日誌が提出されていません。</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </section>
+</article>
+{% endblock %}

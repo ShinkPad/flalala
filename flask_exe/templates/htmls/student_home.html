@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block contents %}
+<article>
+    <div class="student-header">
+        <span class="user-badge">👤 {{ session.get('username') }}</span>
+        <h1>📓 学習日誌</h1>
+        <p>毎日の学習を記録して、自分の成長を見守ろう。</p>
+    </div>
+
+    <section>
+        <h2>✍️ 新しい日誌を作成</h2>
+        
+        <div class="journal-form">
+            <form method="POST" action="/submit_report">
+                <fieldset>
+                    <legend>日誌情報を入力</legend>
+                    
+                    <div>
+                        <label for="date">📅 日付：</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+
+                    <div>
+                        <label for="title">📌 タイトル：</label>
+                        <input type="text" id="title" name="title" placeholder="例：今日の学習内容" required>
+                    </div>
+
+                    <div>
+                        <label for="content">📝 内容：</label>
+                        <textarea id="content" name="content" placeholder="今日の学習や感想を書いてください...&#10;例：&#10;・今日学んだこと&#10;・難しかったこと&#10;・明日の目標" required></textarea>
+                    </div>
+
+                    <button type="submit">💾 日誌を保存</button>
+                </fieldset>
+            </form>
+        </div>
+    </section>
+
+    <section>
+        <h2>📚 あなたの日誌一覧</h2>
+        
+        {% if reports %}
+        <table class="reports-table">
+            <thead>
+                <tr>
+                    <th>📅 日付</th>
+                    <th>📌 タイトル</th>
+                    <th>📝 内容</th>
+                    <th>💬 先生のコメント</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                <tr>
+                    <td>{{ report.date }}</td>
+                    <td>{{ report.title }}</td>
+                    <td>{{ report.content }}</td>
+                    <td>
+                        {% if report.comment %}
+                            <div class="teacher-comment">
+                                {{ report.comment }}
+                                {% if report.comment_teacher %}
+                                <div class="comment-author">
+                                    — {{ report.comment_teacher }}先生
+                                </div>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="no-comment">コメントはまだありません</div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p>まだ日誌がありません。</p>
+            <p>上のフォームから最初の日誌を作成してみましょう！</p>
+        </div>
+        {% endif %}
+    </section>
+</article>
+{% endblock %}

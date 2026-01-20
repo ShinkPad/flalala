@@ -2,18 +2,29 @@
 <html lang="ja">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>津山高専HR管理システム</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>
-        {% block title %}
-        <!-- タイトル -->
-        {% endblock %}
-    </h1>
-    <div>
-        {% block contents %}
-        <!-- 内容 -->
-        {% endblock %}
+    <header class="top-header">
+        <div class="header-content">
+            <h1 style="font-size: 18px; margin: 0;">津山高専 HR管理システム</h1>
+            {% if session.get('username') %}
+            <div class="user-info-header">
+                <span>👤 {{ session.get('username') }}</span>
+                <a href="/logout" class="logout-link">ログアウト</a>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <div class="container">
+        <main>
+            {% block contents %}
+            <!-- 内容 -->
+            {% endblock %}
+        </main>
     </div>
 </body>
 </html>

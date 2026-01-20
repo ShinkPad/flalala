@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{# h1タイトルの書き換え #}
+{% block title %}
+    津山高専HR管理システム ホームページ
+{% endblock %}
+
+{# 内容の書き換え #}
+{% block contents %}
+    <p>
+        ようこそ！{{ username }}さん！<br>
+        現在時刻：{{ time }}
+    </p>
+
+    <table border="1" width="400">
+        <caption>提出されたクラス日誌</caption>
+
+        {% for index, row in reports %}
+        <tr>
+            <td rowspan="2">{{ index + 1 }}</td>
+            <td>日付：</td>
+            <td>{{ row.get('datetime', '') }}</td>
+            <td>作成者：</td>
+            <td>{{ row.get('author', '') }}</td>
+        </tr>
+        <tr>
+            <td>感想：</td>
+            <td colspan="3">{{ row.get('content', '') }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}
+津山高専HR管理システム
+{% endblock %}
+{% block contents %}
+<p>現在時刻：{{ time }}</p>
+{% if error %}
+    <p style="color:red">{{ error }}</p>
+{% endif %}
+<table border="1" width="400">
+    <caption>ログイン</caption>
+    <form method="POST" action="/login">
+        <tr>
+            <td>ユーザー名:</td>
+            <td><input type="text" name="username" size="20"/></td>
+        </tr>
+        <tr>
+            <td>パスワード:</td>
+            <td><input type="password" name="password" size="20"/></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <input type="submit" value="ログイン"/>
+                <a href="/password?login=1">パスワード忘れちゃった(-_-;)</a>
+            </td>
+        </tr>
+    </form>
+</table>
+{% endblock %}
